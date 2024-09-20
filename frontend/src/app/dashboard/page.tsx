@@ -6,6 +6,8 @@ const Page = () => {
 
   const { claim, balanceOf, totalSupply, loading } = useKalpApi();
   const [walletAddress, setWalletAddress] = useState("");
+  const [receiverAddress, setReceiverWalletAddress] = useState("");
+  const [transferValue] = useState(0);
   const [balance, setBalance] = useState(0);
   const [totalAirdrop, setTotalAirdrop] = useState(0);
 
@@ -49,7 +51,7 @@ const Page = () => {
       <div className='border-2 py-4 px-16 mt-8 rounded-lg text-4xl w-fit'>Airdrop Machine</div>
 
       <div className='flex flex-col border-2 p-8 mt-8 rounded-lg w-fit gap-3'>
-        Enter Your Address To Calim :
+        Enter Your Address To Claim :
         <input placeholder='Enter your wallet address' type="text" className='border p-2 rounded-lg w-56 text-black' onChange={(e) => setWalletAddress(e.target.value)} />
         <button className='border-2 p-2 rounded-lg bg-blue-500 hover:bg-blue-400 text-white disabled:bg-blue-400' onClick={handleClaim} disabled={loading}>{loading ? "Please wait.. " : "Claim"}</button>
       </div>

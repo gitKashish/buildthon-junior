@@ -18,7 +18,7 @@ export interface KalpApiResponse<T = unknown> {
       body: JSON.stringify({
         network: 'TESTNET',
         blockchain: 'KALP',
-        walletAddress: '928bc86952ebb55788e2042ad478b8c1db3ded0d',
+        walletAddress: 'b1036fdd6fa97e145dac4b874056aaefdb7da1e3',
         args,
       }),
     });

@@ -12,7 +12,7 @@ export const useKalpApi = () => {
     const params = {
       network: 'TESTNET',
       blockchain: 'KALP',
-      walletAddress: '928bc86952ebb55788e2042ad478b8c1db3ded0d',
+      walletAddress: 'b1036fdd6fa97e145dac4b874056aaefdb7da1e3',
       args: args,
     };
 
@@ -43,7 +43,7 @@ export const useKalpApi = () => {
   const claim = async (address : string) => {
     setLoading(true);
     const endpoint =
-      'https://gateway-api.kalp.studio/v1/contract/kalp/invoke/M5fb2tJjsQk6unfWDttcTxkp1GC129dr1726253658000/Claim';
+      'https://gateway-api.kalp.studio/v1/contract/kalp/invoke/DTa39OJe9qpWpUOFsblReuL0uuV5oLHO1726828129533/Claim';
     const args = {
       amount: 100,
       address: address,
@@ -53,7 +53,7 @@ export const useKalpApi = () => {
 
   const balanceOf = async (account : string) => {
     const endpoint =
-      'https://gateway-api.kalp.studio/v1/contract/kalp/query/M5fb2tJjsQk6unfWDttcTxkp1GC129dr1726253658000/BalanceOf';
+      'https://gateway-api.kalp.studio/v1/contract/kalp/query/DTa39OJe9qpWpUOFsblReuL0uuV5oLHO1726828129533/BalanceOf';
     const args = {
       account: account,
     };
@@ -62,12 +62,23 @@ export const useKalpApi = () => {
 
   const totalSupply = async () => {
     const endpoint =
-      'https://gateway-api.kalp.studio/v1/contract/kalp/query/M5fb2tJjsQk6unfWDttcTxkp1GC129dr1726253658000/TotalSupply';
+      'https://gateway-api.kalp.studio/v1/contract/kalp/query/DTa39OJe9qpWpUOFsblReuL0uuV5oLHO1726828129533/TotalSupply';
     const args = {};
     return callApi(endpoint, args);
   };
 
-  return { claim, balanceOf, totalSupply, loading, error };
+  const transferToken = async (from : string, to : string, value : number) => {
+    const endpoint = 
+      'https://gateway-api.kalp.studio/v1/contract/kalp/invoke/DTa39OJe9qpWpUOFsblReuL0uuV5oLHO1726828129533/TransferFrom';
+    const args = {
+      from: from,
+      to: to,
+      value: value
+    };
+    return callApi(endpoint, args);
+  };
+
+  return { claim, balanceOf, totalSupply, transferToken, loading, error };
 };
 
 
