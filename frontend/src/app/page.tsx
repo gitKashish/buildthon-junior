@@ -54,7 +54,7 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     handleTotalSupply()
-  }, []);
+  }, [handleClaim]);
 
   return (
     <div className='flex flex-col items-center min-h-screen bg-gray-100 font-sans p-4'>
@@ -133,10 +133,11 @@ const Home: React.FC = () => {
           <button
             className='w-full bg-indigo-500 text-white py-2 rounded-md hover:bg-indigo-400 transition-all'
             onClick={handleBalanceOf}
+            disabled={loading}
           >
-            Check Balance
+            {loading ? "Processing..." : "Check Balance"}
           </button>
-          <p className='text-4xl text-indigo-500 font-bold mt-4' aria-disabled={loading}>{balance}</p>
+          <p className='text-4xl text-indigo-500 font-bold mt-4'>{balance}</p>
         </div>
 
       </div>

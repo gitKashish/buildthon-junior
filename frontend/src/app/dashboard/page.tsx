@@ -2,12 +2,13 @@
 import React, { useEffect, useState } from 'react'
 import { useKalpApi } from '@/hooks/useKalpAPI'
 
-const Page = () => {
+const Home: React.FC = () => {
 
-  const { claim, balanceOf, totalSupply, loading } = useKalpApi();
+  const { claim, balanceOf, totalSupply, transferToken, loading } = useKalpApi();
   const [walletAddress, setWalletAddress] = useState("");
-  const [receiverAddress, setReceiverWalletAddress] = useState("");
-  const [transferValue] = useState(0);
+  const [receiverWalletAddress, setReceiverWalletAddress] = useState("");
+  const [senderWalletAddress, setSenderWalletAddress] = useState("");
+  const [transferValue, setTransferValue] = useState(0);
   const [balance, setBalance] = useState(0);
   const [totalAirdrop, setTotalAirdrop] = useState(0);
 
@@ -18,6 +19,16 @@ const Page = () => {
       console.log('Claim successful:', data);
     } catch (err) {
       console.error('Claim error:', err);
+    }
+  };
+
+  const handleTransfer = async () => {
+    try {
+      const data = await transferToken(senderWalletAddress, receiverWalletAddress, transferValue);
+      await handleTotalSupply();
+      console.log('Transfer successful:', data);
+    } catch (err) {
+      console.error('Transfer error', err);
     }
   };
 
@@ -43,31 +54,89 @@ const Page = () => {
 
   useEffect(() => {
     handleTotalSupply()
-  }, []);
+  }, [handleClaim]);
 
   return (
-    <div className='flex flex-col justify-center items-center'>
+    <div className='flex flex-col items-center min-h-screen bg-gray-100 font-sans p-4'>
 
-      <div className='border-2 py-4 px-16 mt-8 rounded-lg text-4xl w-fit'>Airdrop Machine</div>
-
-      <div className='flex flex-col border-2 p-8 mt-8 rounded-lg w-fit gap-3'>
-        Enter Your Address To Claim :
-        <input placeholder='Enter your wallet address' type="text" className='border p-2 rounded-lg w-56 text-black' onChange={(e) => setWalletAddress(e.target.value)} />
-        <button className='border-2 p-2 rounded-lg bg-blue-500 hover:bg-blue-400 text-white disabled:bg-blue-400' onClick={handleClaim} disabled={loading}>{loading ? "Please wait.. " : "Claim"}</button>
+      {/* Header */}
+      <div className='text-4xl font-semibold mb-10 text-gray-900'>
+        Airdrop Machine
       </div>
 
-      <div className='lg:flex gap-12'>
-        <div className='flex flex-col border-2 p-8 mt-8 rounded-lg w-fit gap-3'>
-          Total Airdrop Token Claimed :
-          <p className='text-6xl text-blue-500 font-bold w-56'>{totalAirdrop}</p>
+      {/* Container for all sections */}
+      <div className='w-full max-w-3xl grid grid-cols-1 md:grid-cols-2 gap-6'>
+
+        {/* Claim Section */}
+        <div className='bg-white p-6 rounded-lg shadow-md flex flex-col items-center'>
+          <h2 className='text-xl font-medium text-gray-800 mb-4'>Claim Airdrop</h2>
+          <input
+            placeholder='Wallet Address'
+            type="text"
+            className='w-full border border-gray-300 text-black p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400 mb-4'
+            onChange={(e) => setWalletAddress(e.target.value)}
+          />
+          <button
+            className='w-full bg-indigo-500 text-white py-2 rounded-md hover:bg-indigo-400 transition-all disabled:bg-indigo-300'
+            onClick={handleClaim}
+            disabled={loading}
+          >
+            {loading ? "Processing..." : "Claim Tokens"}
+          </button>
         </div>
 
-        <div className='flex flex-col border-2 p-8 mt-8 rounded-lg w-fit gap-3'>
-          My Balance :
-          <input placeholder='Enter your wallet address' type="text" className='border p-2 rounded-lg w-56 text-black' onChange={(e) => setWalletAddress(e.target.value)} />
-          <button className='border-2 p-2 rounded-lg bg-blue-500 hover:bg-blue-400 text-white' onClick={handleBalanceOf}>See</button>
+        {/* Transfer Section */}
+        <div className='bg-white p-6 rounded-lg shadow-md flex flex-col items-center'>
+          <h2 className='text-xl font-medium text-gray-800 mb-4'>Transfer Tokens</h2>
+          <input
+            placeholder='Sender Address'
+            type="text"
+            className='w-full border text-black border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400 mb-3'
+            onChange={(e) => setSenderWalletAddress(e.target.value)}
+          />
+          <input
+            placeholder='Receiver Address'
+            type="text"
+            className='w-full border text-black border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400 mb-3'
+            onChange={(e) => setReceiverWalletAddress(e.target.value)}
+          />
+          <input
+            placeholder='Amount'
+            type="number"
+            className='w-full border border-gray-300 text-black p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400 mb-4'
+            onChange={(e) => setTransferValue(e.target.valueAsNumber)}
+          />
+          <button
+            className='w-full bg-indigo-500 text-white py-2 rounded-md hover:bg-indigo-400 transition-all disabled:bg-indigo-300'
+            onClick={handleTransfer}
+            disabled={loading}
+          >
+            {loading ? "Processing..." : "Transfer Tokens"}
+          </button>
+        </div>
 
-          <p className='text-2xl font-bold w-56'>Balance: <span className='text-blue-500 text-4xl'> {balance}</span></p>
+        {/* Total Airdrop */}
+        <div className='bg-white p-6 rounded-lg shadow-md flex flex-col items-center'>
+          <h3 className='text-xl font-medium text-gray-800 mb-4'>Total Airdrop Claimed</h3>
+          <p className='text-5xl text-indigo-500 font-bold'>{totalAirdrop}</p>
+        </div>
+
+        {/* Wallet Balance */}
+        <div className='bg-white p-6 rounded-lg shadow-md flex flex-col items-center'>
+          <h3 className='text-xl font-medium text-gray-800 mb-4'>My Balance</h3>
+          <input
+            placeholder='Wallet Address'
+            type="text"
+            className='w-full border border-gray-300 text-black p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400 mb-4'
+            onChange={(e) => setWalletAddress(e.target.value)}
+          />
+          <button
+            className='w-full bg-indigo-500 text-white py-2 rounded-md hover:bg-indigo-400 transition-all'
+            onClick={handleBalanceOf}
+          >
+            Check Balance
+          </button>
+          <p className='text-4xl text-indigo-500 font-bold mt-4' aria-disabled={loading}>{balance}</p>
         </div>
 
       </div>
@@ -76,4 +145,4 @@ const Page = () => {
   )
 }
 
-export default Page
+export default Home;

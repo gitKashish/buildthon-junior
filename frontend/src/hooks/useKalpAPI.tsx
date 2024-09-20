@@ -52,6 +52,7 @@ export const useKalpApi = () => {
   };
 
   const balanceOf = async (account : string) => {
+    setLoading(true);
     const endpoint =
       'https://gateway-api.kalp.studio/v1/contract/kalp/query/DTa39OJe9qpWpUOFsblReuL0uuV5oLHO1726828129533/BalanceOf';
     const args = {
@@ -68,6 +69,7 @@ export const useKalpApi = () => {
   };
 
   const transferToken = async (from : string, to : string, value : number) => {
+    setLoading(true);
     const endpoint = 
       'https://gateway-api.kalp.studio/v1/contract/kalp/invoke/DTa39OJe9qpWpUOFsblReuL0uuV5oLHO1726828129533/TransferFrom';
     const args = {
